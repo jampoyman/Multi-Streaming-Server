@@ -3,10 +3,9 @@
 SCRIPT_LOCATION=$(readlink -f "$0")
 SCRIPT_PATH=$(dirname ${SCRIPT_LOCATION})
 PROJECT_PATH="${PROJECT_PATH:-$SCRIPT_PATH}"
-NGINX_VERSION=1.9.5
-NGINX_RTMP_MODULE_VERSION=1.2.1
+NGINX_VERSION=1.21.1
+NGINX_RTMP_MODULE_VERSION=1.2.2
 NGINX_PATH=/usr/sbin/nginx                              # Make sure to change the init file too
-NGINX_CONFIG_WATCHER_PATH=/usr/local/nginx/conf-watcher # Make sure to change the init file too
 
 echo "Script location: ${SCRIPT_LOCATION}"
 echo "Project path: ${PROJECT_PATH}"
@@ -14,12 +13,10 @@ echo "Nginx version: ${NGINX_VERSION}"
 echo "Nginx RTPM module version: ${NGINX_RTMP_MODULE_VERSION}"
 echo "Nginx path: ${NGINX_PATH}"
 
+sudo apt-get install software-properties-common
 # Check that Nginx is not already installed
 if [ ! -e $NGINX_PATH ]; then
     echo "Nginx server doesn't exist yet."
-
-    # Add an APT repository to install FFMpeg (used to encode video stream)
-    add-apt-repository ppa:mc3man/trusty-media
     
     # Make sure the new APT repository is taken into account
     apt-get update
@@ -40,7 +37,7 @@ if [ ! -e $NGINX_PATH ]; then
     
     # Build Nginx with the RTMP module included
     cd nginx-${NGINX_VERSION}
-    ./configure --with-http_ssl_module --add-module=../nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION}
+    ./configure --without-http_gzip_module --with-http_ssl_module --add-module=../nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION}
     make
     make install
     cd ..
@@ -82,30 +79,4 @@ if [ ! -e $NGINX_PATH ]; then
     update-rc.d nginx defaults
 fi
 
-if [ ! -e $NGINX_CONFIG_WATCHER_PATH ]; then
-    echo "Nginx's configuration watcher doesn't exist yet."
-
-    # Install Node JS and NPM
-    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-	apt-get install -y nodejs nodejs-legacy npm
-	
-    # Install forever
-    npm install forever -g
-
-    # Copy the Nginx config file watcher script
-    cp -rf ${PROJECT_PATH}/nodejs/nginx-conf-watcher ${NGINX_CONFIG_WATCHER_PATH}
-
-    # Copy nginx-conf-watcher to watch Nginx config file at startup
-    cp -f ${PROJECT_PATH}/nginx/init/nginx-conf-watcher /etc/init.d/
-
-    # Make sure that the script use Unix line endings
-    sed -i 's/\r//' /etc/init.d/nginx-conf-watcher
-        
-    # Make sure the scripts can be executed 
-    chmod +x /etc/init.d/nginx-conf-watcher
-    
-    update-rc.d nginx-conf-watcher defaults
-fi
-
 /etc/init.d/nginx start
-/etc/init.d/nginx-conf-watcher start
