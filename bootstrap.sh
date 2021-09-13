@@ -35,7 +35,7 @@ if [ ! -e $NGINX_PATH ]; then
     wget https://github.com/sergey-dryabzhinsky/nginx-rtmp-module/archive/refs/heads/dev.zip
     # Unzip the zip file
     unzip ${NGINX_RTMP_MODULE_VERSION}.zip
-    cd nginx-rtmp-module-1.2.2
+    cd nginx-rtmp-module-dev
     find ./ -type f -exec sed -i 's/rtmp/pogi/g' {} \;
     mmv '*rtmp*' '#1pogi#2'
     cd ..
