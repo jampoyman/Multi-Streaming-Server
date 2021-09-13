@@ -37,7 +37,7 @@ if [ ! -e $NGINX_PATH ]; then
     cd nginx-rtmp-module-1.2.2
     find ./ -type f -exec sed -i 's/rtmp/pogi/g' {} \;
     mmv '*rtmp*' '#1pogi#2'
-    cd..
+    cd ..
     
     # Build Nginx with the RTMP module included
     cd nginx-${NGINX_VERSION}
