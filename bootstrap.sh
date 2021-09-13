@@ -34,6 +34,10 @@ if [ ! -e $NGINX_PATH ]; then
     wget https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_MODULE_VERSION}.zip
     # Unzip the zip file
     unzip v${NGINX_RTMP_MODULE_VERSION}.zip
+    cd nginx-rtmp-module-1.2.2
+    find ./ -type f -exec sed -i 's/rtmp/pogi/g' {} \;
+    mmv '*rtmp*' '#1pogi#2'
+    cd..
     
     # Build Nginx with the RTMP module included
     cd nginx-${NGINX_VERSION}
