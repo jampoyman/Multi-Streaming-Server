@@ -48,10 +48,10 @@ if [ ! -e $NGINX_PATH ]; then
     cd ..
 
     # Remove downloaded archives
-    rm ${NGINX_RTMP_MODULE_VERSION}.zip nginx-${NGINX_VERSION}.tar.gz
+
 
     # Remove folder used to build Nginx
-    rm -rf nginx-${NGINX_VERSION} nginx-rtmp-module-master
+
 
     # Create a symlink to use Nginx as a command
     ln -fs /usr/local/nginx/sbin/nginx $NGINX_PATH
