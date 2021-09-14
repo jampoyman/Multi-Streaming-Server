@@ -31,10 +31,26 @@ if [ ! -e $NGINX_PATH ]; then
     tar -zxvf nginx-${NGINX_VERSION}.tar.gz
     
     # Download Nginx's RTMP module used for live broadcasting
-    #wget https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_MODULE_VERSION}.zip
+    
     wget https://github.com/sergey-dryabzhinsky/nginx-rtmp-module/archive/refs/heads/dev.zip
     # Unzip the zip file
-    unzip dev.zip
+    unzip ${NGINX_RTMP_MODULE_VERSION}.zip
+    cd nginx-rtmp-module-dev
+    find ./ -type f -exec sed -i 's/rtmp/pogi/g' {} \;
+    mmv '*rtmp*' '#1rtmps#2'
+    cd ..
+    cd /hls
+    mmv '*rtmp*' '#1rtmps#2'
+    cd ..
+    cd /dash
+    mmv '*rtmp*' '#1rtmps#2'
+    cd ..
+    cd /test
+    mmv '*rtmp*' '#1rtmps#2'
+    cd ..
+    cd /doc
+    mmv '*rtmp*' '#1rtmps#2'
+    cd ..
     
     # Build Nginx with the RTMP module included
     cd nginx-${NGINX_VERSION}
@@ -44,10 +60,10 @@ if [ ! -e $NGINX_PATH ]; then
     cd ..
 
     # Remove downloaded archives
-    rm v${NGINX_RTMP_MODULE_VERSION}.zip nginx-${NGINX_VERSION}.tar.gz
+
 
     # Remove folder used to build Nginx
-    rm -rf nginx-${NGINX_VERSION} nginx-rtmp-module-master
+
 
     # Create a symlink to use Nginx as a command
     ln -fs /usr/local/nginx/sbin/nginx $NGINX_PATH
