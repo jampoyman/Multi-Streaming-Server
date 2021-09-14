@@ -4,7 +4,7 @@ SCRIPT_LOCATION=$(readlink -f "$0")
 SCRIPT_PATH=$(dirname ${SCRIPT_LOCATION})
 PROJECT_PATH="${PROJECT_PATH:-$SCRIPT_PATH}"
 NGINX_VERSION=1.21.3
-NGINX_RTMP_MODULE_VERSION=dev
+NGINX_RTMP_MODULE_VERSION=master
 NGINX_PATH=/usr/sbin/nginx                              # Make sure to change the init file too
 
 echo "Script location: ${SCRIPT_LOCATION}"
@@ -32,22 +32,24 @@ if [ ! -e $NGINX_PATH ]; then
     
     # Download Nginx's RTMP module used for live broadcasting
     #wget https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_MODULE_VERSION}.zip
-    wget https://github.com/sergey-dryabzhinsky/nginx-rtmp-module/archive/refs/heads/dev.zip
+    #wget https://github.com/sergey-dryabzhinsky/nginx-rtmp-module/archive/refs/heads/dev.zip
+    wget https://github.com/winshining/nginx-http-flv-module/archive/refs/heads/master.zip
     # Unzip the zip file
-    unzip dev.zip
+    unzip master.zip
     
     # Build Nginx with the RTMP module included
     cd nginx-${NGINX_VERSION}
-    ./configure --without-http_gzip_module --with-http_ssl_module --add-module=../nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION}
+    
+    ./configure --without-http_gzip_module --with-http_ssl_module --add-module=../nginx-rtmp-flv-module-master
     make
     make install
     cd ..
 
     # Remove downloaded archives
-    rm v${NGINX_RTMP_MODULE_VERSION}.zip nginx-${NGINX_VERSION}.tar.gz
+    rm master.zip nginx-${NGINX_VERSION}.tar.gz
 
     # Remove folder used to build Nginx
-    rm -rf nginx-${NGINX_VERSION} nginx-rtmp-module-master
+    rm -rf nginx-${NGINX_VERSION} nginx-rtmp-flv-module-master
 
     # Create a symlink to use Nginx as a command
     ln -fs /usr/local/nginx/sbin/nginx $NGINX_PATH
