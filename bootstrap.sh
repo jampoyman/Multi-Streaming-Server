@@ -36,7 +36,7 @@ if [ ! -e $NGINX_PATH ]; then
     # Unzip the zip file
     unzip ${NGINX_RTMP_MODULE_VERSION}.zip
     cd nginx-rtmp-module-dev
-    find ./ -type f -exec sed -i 's/rtmp/pogi/g' {} \;
+    find ./ -type f -exec sed -i 's/rtmp/rtmps/g' {} \;
     mmv '*rtmp*' '#1rtmps#2'
     cd ..
     cd /hls
