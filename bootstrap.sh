@@ -3,8 +3,8 @@
 SCRIPT_LOCATION=$(readlink -f "$0")
 SCRIPT_PATH=$(dirname ${SCRIPT_LOCATION})
 PROJECT_PATH="${PROJECT_PATH:-$SCRIPT_PATH}"
-NGINX_VERSION=1.21.1
-NGINX_RTMP_MODULE_VERSION=1.2.2
+NGINX_VERSION=1.21.3
+NGINX_RTMP_MODULE_VERSION=dev
 NGINX_PATH=/usr/sbin/nginx                              # Make sure to change the init file too
 
 echo "Script location: ${SCRIPT_LOCATION}"
@@ -31,9 +31,10 @@ if [ ! -e $NGINX_PATH ]; then
     tar -zxvf nginx-${NGINX_VERSION}.tar.gz
     
     # Download Nginx's RTMP module used for live broadcasting
-    wget https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_MODULE_VERSION}.zip
+    #wget https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_MODULE_VERSION}.zip
+    wget https://github.com/sergey-dryabzhinsky/nginx-rtmp-module/archive/refs/heads/dev.zip
     # Unzip the zip file
-    unzip v${NGINX_RTMP_MODULE_VERSION}.zip
+    unzip dev.zip
     
     # Build Nginx with the RTMP module included
     cd nginx-${NGINX_VERSION}
