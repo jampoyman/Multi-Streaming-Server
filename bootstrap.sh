@@ -40,7 +40,7 @@ if [ ! -e $NGINX_PATH ]; then
     # Build Nginx with the RTMP module included
     cd nginx-${NGINX_VERSION}
     
-    ./configure --without-http_gzip_module --with-http_ssl_module --add-module=../nginx-rtmp-flv-module-master
+    ./configure --without-http_gzip_module --with-http_ssl_module --add-module=../nginx-http-flv-module-master
     make
     make install
     cd ..
